@@ -61,11 +61,17 @@ func (s *Client) LoadKey(key []byte) error {
 	return nil
 }
 
-// TODO: Not right
-type Result string
-
 // Exec runs the command on the server that's connected to by this client, if
 // It will handle sessions automatically.
 func (s *Client) Exec(cmd string) Result {
-	return Result{}
+	sess, serr := s.Session()
+	if serr != nil {
+		return Result{err: serr}
+	}
+	defer sess.Close()
+
+	var r Result
+
+	r.Output, r.err = sess.Output(cmd)
+	return r
 }
