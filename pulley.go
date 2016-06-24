@@ -47,12 +47,25 @@ func (s *Client) LoadDefaultKey() error {
 		return err
 	}
 
-	parsedKey, perr := ssh.ParsePrivateKey(key)
-	if perr != nil {
+	return s.LoadKey(key)
+}
+
+// LoadKey will load the key given in a []byte
+func (s *Client) LoadKey(key []byte) error {
+	parsedKey, err := ssh.ParsePrivateKey(key)
+	if err != nil {
 		return err
 	}
 
 	s.config.Auth = append(s.config.Auth, ssh.PublicKeys(parsedKey))
-
 	return nil
+}
+
+// TODO: Not right
+type Result string
+
+// Exec runs the command on the server that's connected to by this client, if
+// It will handle sessions automatically.
+func (s *Client) Exec(cmd string) Result {
+	return Result{}
 }
