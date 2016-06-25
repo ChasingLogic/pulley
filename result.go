@@ -11,7 +11,7 @@ func (r *Result) String() string {
 	return string(r.Output)
 }
 
-// Err will return the error that occurred
+// Err will return the error that occurred and nil if there was no errors.
 func (r *Result) Err() error {
 	return r.err
 }
