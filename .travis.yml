@@ -1,6 +1,6 @@
 language: go
 
 before_script:
-    ssh-keygen -t rsa -N ''
-    ssh-copy-id localhost
+    - ssh-keygen -t rsa -N ''
+    - ssh-copy-id localhost
 
