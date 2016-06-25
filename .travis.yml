@@ -1,4 +1,12 @@
+sudo: required
+
 language: go
+
+services:
+    - docker
+
+go:
+    - tip
 
 addons:
     ssh_known_hosts: localhost
