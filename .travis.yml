@@ -2,5 +2,5 @@ language: go
 
 before_script:
     - ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
-    - ssh-copy-id localhost
+    - yes | ssh-copy-id localhost
 
