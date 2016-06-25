@@ -8,6 +8,9 @@ services:
 go:
     - tip
 
+install:
+    - go get golang.org/x/crypto/ssh
+
 addons:
     ssh_known_hosts: localhost
 
