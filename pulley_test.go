@@ -9,7 +9,16 @@ import (
 )
 
 func getTestClient() *pulley.Client {
-	c := pulley.New()
+	var c *pulley.Client
+
+	ptu := os.Getenv("PULLEY_TEST_USER")
+	if ptu != "" {
+		c = pulley.New(ptu)
+	} else {
+		u, _ := user.Current()
+		c = pulley.New(u.Username)
+	}
+
 	pts := os.Getenv("PULLEY_TEST_SERVER")
 	if pts != "" {
 		c.HostName = pts
@@ -19,11 +28,8 @@ func getTestClient() *pulley.Client {
 }
 
 func TestClientDefaults(t *testing.T) {
-	c := pulley.New()
-	currentUser, err := user.Current()
-	if err != nil {
-		t.Error("Failed to get current user.")
-	}
+	currentUser, _ := user.Current()
+	c := pulley.New(currentUser.Username)
 
 	if c.User != currentUser.Username {
 		t.Errorf("Expected: %s, Got: %s", currentUser.Username, c.User)
