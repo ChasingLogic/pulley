@@ -4,7 +4,6 @@ addons:
     ssh_known_hosts: localhost
 
 before_script:
-    - mkdir ~/.ssh/
     - cp ./scripts/id_rsa* ~/.ssh/
     - echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
