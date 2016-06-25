@@ -34,6 +34,9 @@ func New() *Client {
 		HostName: "localhost",
 		Port:     "22",
 		User:     u.Username,
+		config: &ssh.ClientConfig{
+			User: u.Username,
+		},
 	}
 }
 
@@ -43,9 +46,17 @@ func (s *Client) Session() (*ssh.Session, error) {
 	return s.connection.NewSession()
 }
 
-// Connect will connect the client to it's hostname and port
+// Connect will connect the client to it's hostname and port, if LoadKey or
+// LoadDefaultKey have not been called yet this will call LoadDefaultKey
 func (s *Client) Connect() error {
 	var err error
+
+	if s.config.Auth == nil {
+		kerr := s.LoadDefaultKey()
+		if kerr != nil {
+			return kerr
+		}
+	}
 
 	s.connection, err = ssh.Dial("tcp",
 		fmt.Sprintf("%s:%s", s.HostName, s.Port),
