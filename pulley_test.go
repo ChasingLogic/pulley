@@ -1,15 +1,25 @@
 package pulley_test
 
 import (
+	"os"
 	"os/user"
 	"testing"
 
 	"github.com/chasinglogic/pulley"
 )
 
+func getTestClient() *pulley.Client {
+	c := pulley.New()
+	pts := os.Getenv("PULLEY_TEST_SERVER")
+	if pts != "" {
+		c.HostName = pts
+	}
+
+	return c
+}
+
 func TestClientDefaults(t *testing.T) {
 	c := pulley.New()
-
 	currentUser, err := user.Current()
 	if err != nil {
 		t.Error("Failed to get current user.")
@@ -29,7 +39,7 @@ func TestClientDefaults(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	c := pulley.New()
+	c := getTestClient()
 	err := c.Connect()
 	if err != nil {
 		t.Error("Failed to connect.", err)
@@ -53,7 +63,7 @@ func TestExec(t *testing.T) {
 }
 
 func TestExecAsync(t *testing.T) {
-	c := pulley.New()
+	c := getTestClient()
 	err := c.Connect()
 	if err != nil {
 		t.Error("Failed to connect.", err)
