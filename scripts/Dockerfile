@@ -6,7 +6,7 @@ FROM ubuntu:latest
 ADD id_rsa.pub /root/.ssh/authorized_keys
 
 # SO INSECURE NEVER USE THIS IMAGE. SERIOUSLY I KNOW I'M A BAD PERSON.
-RUN apt update && apt install openssh-server 
+RUN apt-get update && apt-get install -y openssh-server 
 
 # ONE LAST TIME NEVER USE THIS IMAGE FOR THE LOVE OF RICHARD STALLMAN
 CMD /usr/sbin/sshd -D
