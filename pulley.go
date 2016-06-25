@@ -1,3 +1,5 @@
+// Package pulley is a wrapper around the golang.org/x/crypto/ssh package
+// providing a suckless experience.
 package pulley
 
 import (
@@ -10,7 +12,8 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-// Client is the client for the current ssh session.
+// Client is the client for the ssh connection and the primary way to interact
+// with pulley.
 type Client struct {
 	HostName   string
 	Port       string
@@ -19,8 +22,9 @@ type Client struct {
 	connection *ssh.Client
 }
 
-// New creates a default SSHClient you can use globally, using an import such as
-// ssh import "github.com/chasinglogic/pulley"
+// New creates a default Client. Modify this client via it's public members,
+// HostName, Port, and User. These default to localhost, 22, and the current
+// user running the process.
 func New() *Client {
 	// dump the error because we don't care. If there is an error it's likely
 	// the calling code will set the user explicitly
@@ -39,7 +43,7 @@ func (s *Client) Session() (*ssh.Session, error) {
 	return s.connection.NewSession()
 }
 
-// Connect will connect the client to the given hostname and port
+// Connect will connect the client to it's hostname and port
 func (s *Client) Connect() error {
 	var err error
 
@@ -62,7 +66,7 @@ func (s *Client) LoadDefaultKey() error {
 	return s.LoadKey(key)
 }
 
-// LoadKey will load the key given in a []byte
+// LoadKey will load the given key
 func (s *Client) LoadKey(key []byte) error {
 	parsedKey, err := ssh.ParsePrivateKey(key)
 	if err != nil {
@@ -74,7 +78,7 @@ func (s *Client) LoadKey(key []byte) error {
 }
 
 // Exec runs the command on the server that's connected to by this client, if
-// It will handle sessions automatically.
+// It will handle sessions automatically and return a pulley.Result
 func (s *Client) Exec(cmd string) Result {
 	sess, serr := s.Session()
 	if serr != nil {
@@ -88,7 +92,7 @@ func (s *Client) Exec(cmd string) Result {
 	return r
 }
 
-// ExecErr is the same as exec however the result's output will be combined
+// ExecErr is the same as exec however the result's output will have both
 // stdout and stderr.
 func (s *Client) ExecErr(cmd string) Result {
 	sess, serr := s.Session()
