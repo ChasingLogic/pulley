@@ -30,6 +30,10 @@ func TestClientDefaults(t *testing.T) {
 
 func TestExec(t *testing.T) {
 	c := pulley.New()
+	err := c.Connect()
+	if err != nil {
+		t.Error("Failed to connect.", err)
+	}
 
 	result := c.Exec(`echo "Hello World"`)
 	if result.Failure() {
@@ -45,11 +49,15 @@ func TestExec(t *testing.T) {
 			result.Err())
 	}
 
-	t.Log(result)
+	t.Log(result.String())
 }
 
 func TestExecAsync(t *testing.T) {
 	c := pulley.New()
+	err := c.Connect()
+	if err != nil {
+		t.Error("Failed to connect.", err)
+	}
 
 	resChannel := make(chan pulley.Result)
 
@@ -60,5 +68,5 @@ func TestExecAsync(t *testing.T) {
 		t.Error("Result was an error.", result, result.Err())
 	}
 
-	t.Log(result)
+	t.Log(result.String())
 }
