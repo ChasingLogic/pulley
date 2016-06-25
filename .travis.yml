@@ -19,4 +19,5 @@ script:
     - docker build -t terrible/container scripts/
     - export CID=$(docker run -d terrible/container)
     - export PULLEY_TEST_SERVER=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID}) 
+    - export PULLEY_TEST_USER="root"
     - go test -v ./...
