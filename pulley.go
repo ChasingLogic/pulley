@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 
 	"golang.org/x/crypto/ssh"
@@ -25,17 +24,13 @@ type Client struct {
 // New creates a default Client. Modify this client via it's public members,
 // HostName, Port, and User. These default to localhost, 22, and the current
 // user running the process.
-func New() *Client {
-	// dump the error because we don't care. If there is an error it's likely
-	// the calling code will set the user explicitly
-	u, _ := user.Current()
-
+func New(user string) *Client {
 	return &Client{
 		HostName: "localhost",
 		Port:     "22",
-		User:     u.Username,
+		User:     user,
 		config: &ssh.ClientConfig{
-			User: u.Username,
+			User: user,
 		},
 	}
 }

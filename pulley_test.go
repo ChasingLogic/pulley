@@ -1,19 +1,35 @@
 package pulley_test
 
 import (
+	"os"
 	"os/user"
 	"testing"
 
 	"github.com/chasinglogic/pulley"
 )
 
-func TestClientDefaults(t *testing.T) {
-	c := pulley.New()
+func getTestClient() *pulley.Client {
+	var c *pulley.Client
 
-	currentUser, err := user.Current()
-	if err != nil {
-		t.Error("Failed to get current user.")
+	ptu := os.Getenv("PULLEY_TEST_USER")
+	if ptu != "" {
+		c = pulley.New(ptu)
+	} else {
+		u, _ := user.Current()
+		c = pulley.New(u.Username)
 	}
+
+	pts := os.Getenv("PULLEY_TEST_SERVER")
+	if pts != "" {
+		c.HostName = pts
+	}
+
+	return c
+}
+
+func TestClientDefaults(t *testing.T) {
+	currentUser, _ := user.Current()
+	c := pulley.New(currentUser.Username)
 
 	if c.User != currentUser.Username {
 		t.Errorf("Expected: %s, Got: %s", currentUser.Username, c.User)
@@ -29,7 +45,7 @@ func TestClientDefaults(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	c := pulley.New()
+	c := getTestClient()
 	err := c.Connect()
 	if err != nil {
 		t.Error("Failed to connect.", err)
@@ -53,7 +69,7 @@ func TestExec(t *testing.T) {
 }
 
 func TestExecAsync(t *testing.T) {
-	c := pulley.New()
+	c := getTestClient()
 	err := c.Connect()
 	if err != nil {
 		t.Error("Failed to connect.", err)

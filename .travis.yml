@@ -1,6 +1,25 @@
+sudo: required
+
 language: go
 
-before_script:
-    - ssh-keygen -t rsa -N ''
-    - ssh-copy-id localhost
+services:
+    - docker
 
+install:
+    - go get golang.org/x/crypto/ssh
+
+addons:
+    ssh_known_hosts: localhost
+
+before_script:
+    - cp ./scripts/id_rsa* ~/.ssh/
+    - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+script:
+    - docker build -t terrible/container scripts/
+    - export CID=$(docker run -d terrible/container)
+    - export PULLEY_TEST_SERVER=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID}) 
+    - export PULLEY_TEST_USER="root"
+    - mkdir -p ~/gopath/src/github.com/chasinglogic/pulley
+    - cp -R * ~/gopath/src/github.com/chasinglogic/pulley/
+    - go test -v ./...
