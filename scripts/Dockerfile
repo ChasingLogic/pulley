@@ -9,4 +9,4 @@ ADD id_rsa.pub /root/.ssh/authorized_keys
 RUN apt-get update && apt-get install -y openssh-server 
 
 # ONE LAST TIME NEVER USE THIS IMAGE FOR THE LOVE OF RICHARD STALLMAN
-CMD /usr/sbin/sshd -D
+CMD ["/usr/sbin/sshd", "-D"]
