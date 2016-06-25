@@ -1,8 +1,5 @@
-# Pulley 
+# Pulley [![Build Status](https://travis-ci.org/ChasingLogic/pulley.svg?branch=master)](https://travis-ci.org/ChasingLogic/pulley) [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/chasinglogic/pulley)
 A suckless way to use SSH as a client in golang.
-
-[![Build Status](https://travis-ci.org/ChasingLogic/pulley.svg?branch=master)](https://travis-ci.org/ChasingLogic/pulley)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/chasinglogic/pulley)
 
 ## Installation
 
