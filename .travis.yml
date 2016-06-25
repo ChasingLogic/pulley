@@ -1,7 +1,15 @@
 language: go
 
-before_script:
-    - ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
-    - echo "StrictHostKeyChecking no" >> ~/.ssh/config
-    - ssh-copy-id localhost
+addons:
+    ssh_known_hosts: localhost
 
+before_script:
+    - mkdir ~/.ssh/
+    - cp ./scripts/id_rsa* ~/.ssh/
+    - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+script:
+    - docker build -t terrible/container scripts/
+    - export CID=$(docker run -d terrible/container)
+    - export PULLEY_TEST_SERVER=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID}) 
+    - go test -v ./...
