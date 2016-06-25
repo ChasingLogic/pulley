@@ -2,5 +2,6 @@ language: go
 
 before_script:
     - ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
-    - yes | ssh-copy-id localhost
+    - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+    - ssh-copy-id localhost
 
